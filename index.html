@@ -1,722 +1,1043 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Green Network - Protect Earth</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>ARCHITECTS - 建筑设计作品</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#000000',
+                        secondary: '#444444',
+                        accent: '#666666',
+                        light: '#f8f8f8',
+                        dark: '#1a1a1a'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-balance {
+                text-wrap: balance;
+            }
+            .transition-smooth {
+                transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            }
+            .hover-lift {
+                transform: translateY(0);
+                transition: transform 0.3s ease;
+            }
+            .hover-lift:hover {
+                transform: translateY(-8px);
+            }
+        }
+    </style>
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        html {
+            scroll-behavior: smooth;
         }
-
-        :root {
-            --primary: #2e7d32;
-            --secondary: #4caf50;
-            --accent: #8bc34a;
-            --light: #e8f5e9;
-            --dark: #1b5e20;
-            --text: #333333;
-            --white: #ffffff;
-        }
-
+        
         body {
-            background-color: var(--light);
-            color: var(--text);
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
-
-        header {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: var(--white);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
         }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        .logo i {
-            font-size: 2rem;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-        }
-
-        nav ul li {
-            margin-left: 2rem;
-        }
-
-        nav ul li a {
-            color: var(--white);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            padding: 0.5rem 0;
+        
+        .project-card {
             position: relative;
+            overflow: hidden;
         }
-
-        nav ul li a:hover {
-            color: var(--accent);
-        }
-
-        nav ul li a::after {
+        
+        .project-card::before {
             content: '';
             position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
             bottom: 0;
+            background: linear-gradient(45deg, transparent 0%, rgba(0,0,0,0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+        
+        .project-card:hover::before {
+            opacity: 1;
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
             left: 0;
             width: 0;
             height: 2px;
-            background-color: var(--accent);
+            background: #000;
             transition: width 0.3s ease;
         }
-
-        nav ul li a:hover::after {
+        
+        .nav-link:hover::after,
+        .nav-link.active::after {
             width: 100%;
         }
-
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url('https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80');
-            background-size: cover;
-            background-position: center;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            text-align: center;
-            color: var(--white);
+        
+        .section-fade {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
         }
-
-        .hero-content {
-            max-width: 800px;
-            margin: 0 auto;
+        
+        .section-fade.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        
+        .architect-card {
+            transition: all 0.4s ease;
         }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
+        
+        .architect-card:hover {
+            background: #f8f8f8;
         }
-
-        .btn {
-            display: inline-block;
-            background-color: var(--accent);
-            color: var(--white);
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
+        
+        .language-toggle {
             cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn:hover {
-            background-color: var(--primary);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        section {
-            padding: 5rem 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-            position: relative;
-            display: inline-block;
-        }
-
-        .section-title h2::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background-color: var(--accent);
-            border-radius: 2px;
-        }
-
-        .section-title p {
-            color: var(--text);
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .about-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: center;
-        }
-
-        .about-img {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .about-img img {
-            width: 100%;
-            height: auto;
-            display: block;
-            transition: transform 0.5s ease;
-        }
-
-        .about-img:hover img {
-            transform: scale(1.05);
-        }
-
-        .about-text h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--dark);
-        }
-
-        .about-text p {
-            margin-bottom: 1.5rem;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 2rem 1rem;
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .stat-item:hover {
-            transform: translateY(-10px);
-        }
-
-        .stat-item i {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 1rem;
-        }
-
-        .stat-item h3 {
-            font-size: 2.5rem;
-            color: var(--dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-item p {
-            color: var(--text);
-        }
-
-        .initiatives {
-            background-color: var(--white);
-        }
-
-        .initiatives-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-        }
-
-        .initiative-card {
-            background-color: var(--light);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease;
-        }
-
-        .initiative-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .initiative-img {
-            height: 200px;
-            overflow: hidden;
-        }
-
-        .initiative-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .initiative-card:hover .initiative-img img {
-            transform: scale(1.1);
-        }
-
-        .initiative-content {
-            padding: 1.5rem;
-        }
-
-        .initiative-content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: var(--dark);
-        }
-
-        .initiative-content p {
-            margin-bottom: 1.5rem;
-        }
-
-        .cta {
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            color: var(--white);
-            text-align: center;
-            padding: 5rem 0;
-        }
-
-        .cta h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .cta p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .cta .btn {
-            background-color: var(--white);
-            color: var(--primary);
-        }
-
-        .cta .btn:hover {
-            background-color: var(--accent);
-            color: var(--white);
-        }
-
-        footer {
-            background-color: var(--dark);
-            color: var(--white);
-            padding: 3rem 0 1rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        .footer-column h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 40px;
-            height: 2px;
-            background-color: var(--accent);
-        }
-
-        .footer-column p {
-            margin-bottom: 1rem;
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
-        .footer-links li a {
-            color: var(--light);
-            text-decoration: none;
             transition: all 0.3s ease;
         }
-
-        .footer-links li a:hover {
-            color: var(--accent);
-            padding-left: 5px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: var(--white);
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            background-color: var(--accent);
-            transform: translateY(-5px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .mobile-menu {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
-        @media (max-width: 992px) {
-            .about-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .initiatives-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .footer-content {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1.1rem;
-            }
-            
-            nav ul {
-                display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 100%;
-                background-color: var(--primary);
-                flex-direction: column;
-                padding: 1rem 0;
-                text-align: center;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-            }
-            
-            nav ul.active {
-                display: flex;
-            }
-            
-            nav ul li {
-                margin: 0;
-                padding: 0.8rem 0;
-            }
-            
-            .mobile-menu {
-                display: block;
-            }
-            
-            .initiatives-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Animation for stats counter */
-        .counter {
-            transition: all 0.5s ease;
+        
+        .language-toggle:hover {
+            opacity: 0.8;
         }
     </style>
 </head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="container nav-container">
-            <div class="logo">
-                <i class="fas fa-seedling"></i>
-                <span>Green Network</span>
-            </div>
-            <nav>
-                <div class="mobile-menu">
-                    <i class="fas fa-bars"></i>
-                </div>
-                <ul>
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#initiatives">Initiatives</a></li>
-                    <li><a href="#get-involved">Get Involved</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container hero-content">
-            <h1>Protect Our Planet, Preserve Our Future</h1>
-            <p>Join the global movement to create a sustainable world through conservation, education, and community action.</p>
-            <a href="#get-involved" class="btn">Join Our Network</a>
+<body class="bg-white text-black">
+    <!-- 导航栏 -->
+    <nav class="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-sm z-50 border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-black flex items-center justify-center">
+                        <span class="text-white text-sm font-bold">A</span>
+                    </div>
+                    <span class="text-xl font-bold tracking-tight">ARCHITECTS</span>
+                </div>
+                
+                <!-- 桌面端导航 -->
+                <div class="hidden md:flex items-center space-x-12">
+                    <a href="#home" class="nav-link text-sm font-medium tracking-wide" data-lang="home">首页</a>
+                    <a href="#projects" class="nav-link text-sm font-medium tracking-wide" data-lang="projects">作品</a>
+                    <a href="#architects" class="nav-link text-sm font-medium tracking-wide" data-lang="architects">建筑师</a>
+                    <a href="#about" class="nav-link text-sm font-medium tracking-wide" data-lang="about">关于</a>
+                    <a href="#contact" class="nav-link text-sm font-medium tracking-wide" data-lang="contact">联系</a>
+                </div>
+                
+                <!-- 语言切换 -->
+                <div class="flex items-center space-x-4">
+                    <div class="language-toggle flex items-center space-x-2" onclick="toggleLanguage()">
+                        <span id="current-lang" class="text-sm font-medium">中</span>
+                        <span class="text-xs text-gray-400">/</span>
+                        <span class="text-sm text-gray-400">EN</span>
+                    </div>
+                    
+                    <!-- 移动端菜单按钮 -->
+                    <button class="md:hidden" onclick="toggleMobileMenu()">
+                        <i class="fa fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 移动端导航菜单 -->
+            <div id="mobile-menu" class="md:hidden hidden mt-4 pb-4">
+                <div class="flex flex-col space-y-4">
+                    <a href="#home" class="text-sm font-medium tracking-wide" data-lang="home">首页</a>
+                    <a href="#projects" class="text-sm font-medium tracking-wide" data-lang="projects">作品</a>
+                    <a href="#architects" class="text-sm font-medium tracking-wide" data-lang="architects">建筑师</a>
+                    <a href="#about" class="text-sm font-medium tracking-wide" data-lang="about">关于</a>
+                    <a href="#contact" class="text-sm font-medium tracking-wide" data-lang="contact">联系</a>
+                </div>
+            </div>
         </div>
-    </section>
+    </nav>
 
-    <!-- About Section -->
-    <section id="about">
-        <div class="container">
-            <div class="section-title">
-                <h2>About Green Network</h2>
-                <p>We are a global community dedicated to environmental protection and sustainable development.</p>
-            </div>
-            <div class="about-content">
-                <div class="about-img">
-                    <img src="https://images.unsplash.com/photo-1507591064344-4c6ce005b128?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" alt="Team planting trees">
-                </div>
-                <div class="about-text">
-                    <h3>Our Mission</h3>
-                    <p>Green Network is committed to creating a sustainable future by protecting natural ecosystems, promoting renewable energy, and empowering communities to take environmental action.</p>
-                    <p>Founded in 2010, we've grown from a small grassroots organization to an international network with over 50,000 members across 120 countries.</p>
-                    <p>Our approach combines scientific research, community engagement, and policy advocacy to address the most pressing environmental challenges of our time.</p>
-                    <a href="#" class="btn">Learn More</a>
-                </div>
-            </div>
-            <div class="stats">
-                <div class="stat-item">
-                    <i class="fas fa-tree"></i>
-                    <h3 class="counter" data-target="2500000">0</h3>
-                    <p>Trees Planted</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-users"></i>
-                    <h3 class="counter" data-target="50000">0</h3>
-                    <p>Active Members</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-globe-americas"></i>
-                    <h3 class="counter" data-target="120">0</h3>
-                    <p>Countries Reached</p>
-                </div>
-                <div class="stat-item">
-                    <i class="fas fa-recycle"></i>
-                    <h3 class="counter" data-target="1500">0</h3>
-                    <p>Cleanup Projects</p>
+    <!-- 首页英雄区域 -->
+    <section id="home" class="hero-gradient min-h-screen flex items-center justify-center pt-20">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <div class="section-fade">
+                <h1 class="text-6xl md:text-8xl font-bold mb-6 tracking-tight" data-lang="hero-title">
+                    建筑设计
+                    <span class="block text-4xl md:text-6xl text-gray-600 mt-2">ARCHITECTURE</span>
+                </h1>
+                <p class="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed" data-lang="hero-subtitle">
+                    极简主义设计理念，创造永恒的建筑美学
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#projects" class="px-8 py-4 bg-black text-white font-medium tracking-wide hover:bg-gray-800 transition-smooth">
+                        <span data-lang="view-projects">查看作品</span>
+                    </a>
+                    <a href="#contact" class="px-8 py-4 border border-black text-black font-medium tracking-wide hover:bg-gray-50 transition-smooth">
+                        <span data-lang="get-in-touch">联系我们</span>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Initiatives Section -->
-    <section class="initiatives" id="initiatives">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Initiatives</h2>
-                <p>Discover the key programs and projects we're implementing to protect our planet.</p>
+    <!-- 作品展示区域 -->
+    <section id="projects" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 section-fade">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4" data-lang="our-projects">我们的作品</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto" data-lang="project-description">
+                    探索我们精心设计的建筑作品，每一个项目都体现着极简主义的设计哲学
+                </p>
             </div>
-            <div class="initiatives-grid">
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://dialogue.earth/content/uploads/2021/04/lessons-from-the-rush-to-reforest-china-dialogue-2400x1599.jpg" alt="Reforestation">
+            
+            <!-- 作品筛选 -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12 section-fade">
+                <button class="filter-btn active px-6 py-2 text-sm font-medium border border-gray-200 hover:border-black transition-smooth" data-filter="all">
+                    <span data-lang="all">全部</span>
+                </button>
+                <button class="filter-btn px-6 py-2 text-sm font-medium border border-gray-200 hover:border-black transition-smooth" data-filter="residential">
+                    <span data-lang="residential">住宅</span>
+                </button>
+                <button class="filter-btn px-6 py-2 text-sm font-medium border border-gray-200 hover:border-black transition-smooth" data-filter="commercial">
+                    <span data-lang="commercial">商业</span>
+                </button>
+                <button class="filter-btn px-6 py-2 text-sm font-medium border border-gray-200 hover:border-black transition-smooth" data-filter="public">
+                    <span data-lang="public">公共</span>
+                </button>
+            </div>
+            
+            <!-- 作品网格 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projects-grid">
+                <!-- 项目1 -->
+                <div class="project-card hover-lift section-fade" data-category="residential">
+                    <div class="aspect-[4/3] overflow-hidden mb-4">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/labis/7f25a52b1f5ee42a3f3f28ba977889ac~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=ruVkz9ZMsBmHPkSynSeVJ2NOGKQ%3D" alt="极简住宅" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
                     </div>
-                    <div class="initiative-content">
-                        <h3>Global Reforestation</h3>
-                        <p>Planting millions of trees worldwide to restore ecosystems, combat climate change, and protect biodiversity.</p>
-                        <a href="#" class="btn">Learn More</a>
+                    <h3 class="text-xl font-semibold mb-2" data-lang="project-1-title">极简主义别墅</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-lang="project-1-desc">
+                        纯粹的几何形态与自然光线的完美结合
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">2024</span>
+                        <button class="text-sm font-medium hover:underline" onclick="openProjectModal('project1')">
+                            <span data-lang="view-details">查看详情</span>
+                        </button>
                     </div>
                 </div>
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://images.unsplash.com/photo-1621451537084-482c73073a0f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80" alt="Ocean Conservation">
+                
+                <!-- 项目2 -->
+                <div class="project-card hover-lift section-fade" data-category="residential">
+                    <div class="aspect-[4/3] overflow-hidden mb-4">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-qvj2lq49k0/044365d1d53649dabb3207a4358676a8~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=ZJstgzHWBW5K8BjqzUfeCHYRdi8%3D" alt="对称住宅" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
                     </div>
-                    <div class="initiative-content">
-                        <h3>Ocean Conservation</h3>
-                        <p>Protecting marine ecosystems, reducing plastic pollution, and promoting sustainable fishing practices.</p>
-                        <a href="#" class="btn">Learn More</a>
+                    <h3 class="text-xl font-semibold mb-2" data-lang="project-2-title">对称式住宅</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-lang="project-2-desc">
+                        平衡与和谐的建筑语言表达
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">2024</span>
+                        <button class="text-sm font-medium hover:underline" onclick="openProjectModal('project2')">
+                            <span data-lang="view-details">查看详情</span>
+                        </button>
                     </div>
                 </div>
-                <div class="initiative-card">
-                    <div class="initiative-img">
-                        <img src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2072&q=80" alt="Renewable Energy">
+                
+                <!-- 项目3 -->
+                <div class="project-card hover-lift section-fade" data-category="commercial">
+                    <div class="aspect-[4/3] overflow-hidden mb-4">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/labis/be3762dacfa8dee7a1644d8bc953cd71~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=fKcn4ZC27Px8QnlmRqD14HlD5B4%3D" alt="现代办公楼" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
                     </div>
-                    <div class="initiative-content">
-                        <h3>Renewable Energy</h3>
-                        <p>Promoting solar, wind, and other clean energy sources to reduce dependence on fossil fuels.</p>
-                        <a href="#" class="btn">Learn More</a>
+                    <h3 class="text-xl font-semibold mb-2" data-lang="project-3-title">现代办公空间</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-lang="project-3-desc">
+                        开放与私密的完美平衡设计
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">2023</span>
+                        <button class="text-sm font-medium hover:underline" onclick="openProjectModal('project3')">
+                            <span data-lang="view-details">查看详情</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 项目4 -->
+                <div class="project-card hover-lift section-fade" data-category="residential">
+                    <div class="aspect-[4/3] overflow-hidden mb-4">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/labis/d46482e03263329a20d4beb37ca940c8~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=rKkC54h277i82Va2x046uJ7JVmw%3D" alt="现代别墅" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" data-lang="project-4-title">现代别墅设计</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-lang="project-4-desc">
+                        自然材料与现代工艺的结合
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">2023</span>
+                        <button class="text-sm font-medium hover:underline" onclick="openProjectModal('project4')">
+                            <span data-lang="view-details">查看详情</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 项目5 -->
+                <div class="project-card hover-lift section-fade" data-category="public">
+                    <div class="aspect-[4/3] overflow-hidden mb-4">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/labis/f736b33d6519d11820524a9fe8e67f40~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=P13FYBL4SHt0bgg9pSUWQe4jKoA%3D" alt="公共建筑" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" data-lang="project-5-title">公共文化中心</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-lang="project-5-desc">
+                        为社区创造的开放文化空间
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">2023</span>
+                        <button class="text-sm font-medium hover:underline" onclick="openProjectModal('project5')">
+                            <span data-lang="view-details">查看详情</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 项目6 -->
+                <div class="project-card hover-lift section-fade" data-category="commercial">
+                    <div class="aspect-[4/3] overflow-hidden mb-4">
+                        <img src="https://p3-flow-imagex-sign.byteimg.com/labis/c6b136bf4f55e998050a6cdc98a82e0f~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=YZ0nPjFBi76gaHA8uDJuXFkGFnw%3D" alt="商业建筑" class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2" data-lang="project-6-title">创意商业空间</h3>
+                    <p class="text-gray-600 text-sm mb-3" data-lang="project-6-desc">
+                        独特的入口设计营造品牌体验
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs text-gray-500">2022</span>
+                        <button class="text-sm font-medium hover:underline" onclick="openProjectModal('project6')">
+                            <span data-lang="view-details">查看详情</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta" id="get-involved">
-        <div class="container">
-            <h2>Join Our Global Movement</h2>
-            <p>Together, we can create a sustainable future for generations to come. Every action counts, no matter how small.</p>
-            <a href="#" class="btn">Become a Member</a>
+    <!-- 建筑师团队 -->
+    <section id="architects" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 section-fade">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4" data-lang="our-architects">我们的建筑师</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto" data-lang="architects-description">
+                    汇聚全球顶尖建筑设计人才，共同创造建筑艺术精品
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 建筑师1 -->
+                <div class="architect-card p-8 bg-white border border-gray-100 rounded-lg section-fade">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full mb-6 flex items-center justify-center">
+                        <i class="fa fa-bullseye text-3xl text-gray-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">张建筑师</h3>
+                    <p class="text-gray-600 text-sm mb-4" data-lang="architect-1-specialty">
+                        极简主义设计专家
+                    </p>
+                    <p class="text-gray-500 text-sm mb-6" data-lang="architect-1-bio">
+                        拥有15年建筑设计经验，专注于极简主义建筑美学的探索与实践。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-black transition-colors">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-black transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 建筑师2 -->
+                <div class="architect-card p-8 bg-white border border-gray-100 rounded-lg section-fade">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full mb-6 flex items-center justify-center">
+                        <i class="fa fa-bullseye text-3xl text-gray-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">李设计师</h3>
+                    <p class="text-gray-600 text-sm mb-4" data-lang="architect-2-specialty">
+                        可持续建筑专家
+                    </p>
+                    <p class="text-gray-500 text-sm mb-6" data-lang="architect-2-bio">
+                        致力于将环保理念融入现代建筑设计，创造绿色可持续的生活空间。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-black transition-colors">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-black transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 建筑师3 -->
+                <div class="architect-card p-8 bg-white border border-gray-100 rounded-lg section-fade">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full mb-6 flex items-center justify-center">
+                        <i class="fa fa-bullseye text-3xl text-gray-400"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">王工程师</h3>
+                    <p class="text-gray-600 text-sm mb-4" data-lang="architect-3-specialty">
+                        结构设计专家
+                    </p>
+                    <p class="text-gray-500 text-sm mb-6" data-lang="architect-3-bio">
+                        专注于创新结构设计，为复杂建筑形态提供技术支持与解决方案。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-black transition-colors">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-black transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer id="contact">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Green Network</h3>
-                    <p>We are dedicated to protecting our planet through collaborative action, education, and sustainable solutions.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+    <!-- 关于我们 -->
+    <section id="about" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                <div class="section-fade">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6" data-lang="about-us">关于我们</h2>
+                    <p class="text-lg text-gray-600 mb-6 leading-relaxed" data-lang="about-description">
+                        我们是一家专注于极简主义建筑设计的国际化事务所，秉承"少即是多"的设计理念，致力于创造永恒的建筑美学。
+                    </p>
+                    <p class="text-lg text-gray-600 mb-8 leading-relaxed" data-lang="about-philosophy">
+                        我们相信，优秀的建筑设计应该简洁而富有内涵，能够与环境和谐共生，为使用者带来愉悦的空间体验。
+                    </p>
+                    
+                    <!-- 统计数据 -->
+                    <div class="grid grid-cols-2 gap-8 mb-8">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold mb-2" data-lang="stats-projects">50+</div>
+                            <div class="text-sm text-gray-600" data-lang="stats-projects-desc">完成项目</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold mb-2" data-lang="stats-clients">30+</div>
+                            <div class="text-sm text-gray-600" data-lang="stats-clients-desc">满意客户</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold mb-2" data-lang="stats-awards">15+</div>
+                            <div class="text-sm text-gray-600" data-lang="stats-awards-desc">设计奖项</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold mb-2" data-lang="stats-years">8+</div>
+                            <div class="text-sm text-gray-600" data-lang="stats-years-desc">行业经验</div>
+                        </div>
+                    </div>
+                    
+                    <a href="#contact" class="inline-flex items-center px-8 py-4 bg-black text-white font-medium tracking-wide hover:bg-gray-800 transition-smooth">
+                        <span data-lang="learn-more">了解更多</span>
+                        <i class="fa fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+                
+                <div class="section-fade">
+                    <div class="relative">
+                        <div class="aspect-[4/3] bg-gray-100 mb-4">
+                            <img src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/1d1385424b974716aeb0649baa7652cb~tplv-a9rns2rl98-image.image?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=rtnlcdzOs4gN0a951QCA2%2FJaH%2F4%3D" alt="建筑师工作室" class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-black flex items-center justify-center">
+                            <span class="text-white text-2xl font-bold">A</span>
+                        </div>
                     </div>
                 </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#home">Home</a></li>
-                        <li><a href="#about">About Us</a></li>
-                        <li><a href="#initiatives">Initiatives</a></li>
-                        <li><a href="#get-involved">Get Involved</a></li>
-                        <li><a href="#contact">Contact</a></li>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section id="contact" class="py-20 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16 section-fade">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4" data-lang="contact-us">联系我们</h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto" data-lang="contact-description">
+                    让我们一起创造令人难忘的建筑作品
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
+                <!-- 联系信息 -->
+                <div class="section-fade">
+                    <h3 class="text-2xl font-semibold mb-8" data-lang="contact-info">联系方式</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-black flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-map-marker text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1" data-lang="address">地址</h4>
+                                <p class="text-gray-600" data-lang="address-details">北京市朝阳区建筑设计中心</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-black flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-phone text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1" data-lang="phone">电话</h4>
+                                <p class="text-gray-600">+86 10 1234 5678</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start space-x-4">
+                            <div class="w-12 h-12 bg-black flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-envelope text-white"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium mb-1" data-lang="email">邮箱</h4>
+                                <p class="text-gray-600">info@architects.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 社交媒体 -->
+                    <div class="mt-12">
+                        <h4 class="font-medium mb-4" data-lang="follow-us">关注我们</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-12 h-12 bg-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                                <i class="fa fa-weibo"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                                <i class="fa fa-wechat"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                                <i class="fa fa-instagram"></i>
+                            </a>
+                            <a href="#" class="w-12 h-12 bg-gray-200 flex items-center justify-center hover:bg-black hover:text-white transition-colors">
+                                <i class="fa fa-linkedin"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 联系表单 -->
+                <div class="section-fade">
+                    <form class="space-y-6" onsubmit="submitForm(event)">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2" data-lang="name">姓名</label>
+                                <input type="text" class="w-full px-4 py-3 border border-gray-300 focus:border-black focus:outline-none transition-colors" placeholder="请输入您的姓名">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2" data-lang="email">邮箱</label>
+                                <input type="email" class="w-full px-4 py-3 border border-gray-300 focus:border-black focus:outline-none transition-colors" placeholder="请输入您的邮箱">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2" data-lang="subject">主题</label>
+                            <input type="text" class="w-full px-4 py-3 border border-gray-300 focus:border-black focus:outline-none transition-colors" placeholder="请输入主题">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-2" data-lang="message">留言</label>
+                            <textarea rows="5" class="w-full px-4 py-3 border border-gray-300 focus:border-black focus:outline-none transition-colors" placeholder="请输入您的留言内容"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full px-8 py-4 bg-black text-white font-medium tracking-wide hover:bg-gray-800 transition-smooth">
+                            <span data-lang="send-message">发送留言</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-black text-white py-12">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Logo和简介 -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-white flex items-center justify-center">
+                            <span class="text-black text-sm font-bold">A</span>
+                        </div>
+                        <span class="text-xl font-bold tracking-tight">ARCHITECTS</span>
+                    </div>
+                    <p class="text-gray-400 mb-6 max-w-md" data-lang="footer-description">
+                        专注于极简主义建筑设计，创造永恒的建筑美学作品。
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-weibo"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-wechat"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 快速链接 -->
+                <div>
+                    <h4 class="text-sm font-medium uppercase tracking-wider mb-4" data-lang="quick-links">快速链接</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#home" class="hover:text-white transition-colors" data-lang="home">首页</a></li>
+                        <li><a href="#projects" class="hover:text-white transition-colors" data-lang="projects">作品</a></li>
+                        <li><a href="#architects" class="hover:text-white transition-colors" data-lang="architects">建筑师</a></li>
+                        <li><a href="#about" class="hover:text-white transition-colors" data-lang="about">关于</a></li>
+                        <li><a href="#contact" class="hover:text-white transition-colors" data-lang="contact">联系</a></li>
                     </ul>
                 </div>
-                <div class="footer-column">
-                    <h3>Our Programs</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Reforestation</a></li>
-                        <li><a href="#">Ocean Cleanup</a></li>
-                        <li><a href="#">Wildlife Protection</a></li>
-                        <li><a href="#">Climate Education</a></li>
-                        <li><a href="#">Sustainable Agriculture</a></li>
+                
+                <!-- 联系信息 -->
+                <div>
+                    <h4 class="text-sm font-medium uppercase tracking-wider mb-4" data-lang="contact-info">联系信息</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center space-x-2">
+                            <i class="fa fa-map-marker text-sm"></i>
+                            <span data-lang="address-details">北京市朝阳区建筑设计中心</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa fa-phone text-sm"></i>
+                            <span>+86 10 1234 5678</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa fa-envelope text-sm"></i>
+                            <span>info@architects.com</span>
+                        </li>
                     </ul>
                 </div>
-                <div class="footer-column">
-                    <h3>Contact Us</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Copper Creek Drive, New York</p>
-                    <p><i class="fas fa-phone"></i> +1 (312) 171-0771</p>
-                    <p><i class="fas fa-envelope"></i> support@greennetwork.org</p>
-                </div>
             </div>
-            <div class="copyright">
-                <p>&copy; 2025 Green Network. All rights reserved.</p>
+            
+            <div class="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400 text-sm">
+                <p>&copy; 2024 ARCHITECTS. All rights reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script>
-        // Mobile Menu Toggle
-        document.querySelector('.mobile-menu').addEventListener('click', function() {
-            document.querySelector('nav ul').classList.toggle('active');
-        });
+    <!-- 项目详情模态框 -->
+    <div id="project-modal" class="fixed inset-0 bg-black/90 z-50 hidden items-center justify-center p-6">
+        <div class="bg-white max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="relative">
+                <!-- 关闭按钮 -->
+                <button onclick="closeProjectModal()" class="absolute top-4 right-4 w-10 h-10 bg-black text-white flex items-center justify-center hover:bg-gray-800 transition-colors z-10">
+                    <i class="fa fa-times"></i>
+                </button>
+                
+                <!-- 项目图片 -->
+                <div class="aspect-[4/3] bg-gray-100">
+                    <img id="modal-image" src="" alt="" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- 项目信息 -->
+                <div class="p-8">
+                    <h3 id="modal-title" class="text-2xl font-bold mb-4"></h3>
+                    <p id="modal-description" class="text-gray-600 mb-6 leading-relaxed"></p>
+                    
+                    <!-- 项目详情 -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div>
+                            <h4 class="font-medium mb-2" data-lang="project-location">地点</h4>
+                            <p class="text-gray-600" id="modal-location"></p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2" data-lang="project-year">年份</h4>
+                            <p class="text-gray-600" id="modal-year"></p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2" data-lang="project-area">面积</h4>
+                            <p class="text-gray-600" id="modal-area"></p>
+                        </div>
+                        <div>
+                            <h4 class="font-medium mb-2" data-lang="project-type">类型</h4>
+                            <p class="text-gray-600" id="modal-type"></p>
+                        </div>
+                    </div>
+                    
+                    <button onclick="closeProjectModal()" class="px-8 py-3 border border-black text-black font-medium tracking-wide hover:bg-gray-50 transition-smooth">
+                        <span data-lang="close">关闭</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // Counter Animation
-        function animateCounters() {
-            const counters = document.querySelectorAll('.counter');
-            const speed = 200; // The lower the slower
+    <script>
+        // 语言配置
+        const translations = {
+            'zh': {
+                'home': '首页',
+                'projects': '作品',
+                'architects': '建筑师',
+                'about': '关于',
+                'contact': '联系',
+                'hero-title': '建筑设计',
+                'hero-subtitle': '极简主义设计理念，创造永恒的建筑美学',
+                'view-projects': '查看作品',
+                'get-in-touch': '联系我们',
+                'our-projects': '我们的作品',
+                'project-description': '探索我们精心设计的建筑作品，每一个项目都体现着极简主义的设计哲学',
+                'all': '全部',
+                'residential': '住宅',
+                'commercial': '商业',
+                'public': '公共',
+                'project-1-title': '极简主义别墅',
+                'project-1-desc': '纯粹的几何形态与自然光线的完美结合',
+                'project-2-title': '对称式住宅',
+                'project-2-desc': '平衡与和谐的建筑语言表达',
+                'project-3-title': '现代办公空间',
+                'project-3-desc': '开放与私密的完美平衡设计',
+                'project-4-title': '现代别墅设计',
+                'project-4-desc': '自然材料与现代工艺的结合',
+                'project-5-title': '公共文化中心',
+                'project-5-desc': '为社区创造的开放文化空间',
+                'project-6-title': '创意商业空间',
+                'project-6-desc': '独特的入口设计营造品牌体验',
+                'view-details': '查看详情',
+                'our-architects': '我们的建筑师',
+                'architects-description': '汇聚全球顶尖建筑设计人才，共同创造建筑艺术精品',
+                'architect-1-specialty': '极简主义设计专家',
+                'architect-1-bio': '拥有15年建筑设计经验，专注于极简主义建筑美学的探索与实践。',
+                'architect-2-specialty': '可持续建筑专家',
+                'architect-2-bio': '致力于将环保理念融入现代建筑设计，创造绿色可持续的生活空间。',
+                'architect-3-specialty': '结构设计专家',
+                'architect-3-bio': '专注于创新结构设计，为复杂建筑形态提供技术支持与解决方案。',
+                'about-us': '关于我们',
+                'about-description': '我们是一家专注于极简主义建筑设计的国际化事务所，秉承"少即是多"的设计理念，致力于创造永恒的建筑美学。',
+                'about-philosophy': '我们相信，优秀的建筑设计应该简洁而富有内涵，能够与环境和谐共生，为使用者带来愉悦的空间体验。',
+                'stats-projects': '50+',
+                'stats-projects-desc': '完成项目',
+                'stats-clients': '30+',
+                'stats-clients-desc': '满意客户',
+                'stats-awards': '15+',
+                'stats-awards-desc': '设计奖项',
+                'stats-years': '8+',
+                'stats-years-desc': '行业经验',
+                'learn-more': '了解更多',
+                'contact-us': '联系我们',
+                'contact-description': '让我们一起创造令人难忘的建筑作品',
+                'contact-info': '联系方式',
+                'address': '地址',
+                'address-details': '北京市朝阳区建筑设计中心',
+                'phone': '电话',
+                'email': '邮箱',
+                'follow-us': '关注我们',
+                'name': '姓名',
+                'subject': '主题',
+                'message': '留言',
+                'send-message': '发送留言',
+                'footer-description': '专注于极简主义建筑设计，创造永恒的建筑美学作品。',
+                'quick-links': '快速链接',
+                'project-location': '地点',
+                'project-year': '年份',
+                'project-area': '面积',
+                'project-type': '类型',
+                'close': '关闭'
+            },
+            'en': {
+                'home': 'Home',
+                'projects': 'Projects',
+                'architects': 'Architects',
+                'about': 'About',
+                'contact': 'Contact',
+                'hero-title': 'ARCHITECTURE',
+                'hero-subtitle': 'Minimalist design philosophy creating timeless architectural aesthetics',
+                'view-projects': 'View Projects',
+                'get-in-touch': 'Get In Touch',
+                'our-projects': 'Our Projects',
+                'project-description': 'Explore our carefully designed architectural works, each project embodies the minimalist design philosophy',
+                'all': 'All',
+                'residential': 'Residential',
+                'commercial': 'Commercial',
+                'public': 'Public',
+                'project-1-title': 'Minimalist Villa',
+                'project-1-desc': 'Perfect combination of pure geometric forms and natural light',
+                'project-2-title': 'Symmetrical Residence',
+                'project-2-desc': 'Expression of balance and harmony in architectural language',
+                'project-3-title': 'Modern Office Space',
+                'project-3-desc': 'Perfect balance between openness and privacy',
+                'project-4-title': 'Contemporary Villa Design',
+                'project-4-desc': 'Integration of natural materials and modern craftsmanship',
+                'project-5-title': 'Public Cultural Center',
+                'project-5-desc': 'Creating open cultural spaces for the community',
+                'project-6-title': 'Creative Commercial Space',
+                'project-6-desc': 'Unique entrance design creating brand experience',
+                'view-details': 'View Details',
+                'our-architects': 'Our Architects',
+                'architects-description': 'Bringing together top architectural design talents worldwide to create architectural masterpieces',
+                'architect-1-specialty': 'Minimalist Design Expert',
+                'architect-1-bio': '15 years of architectural design experience, focusing on the exploration and practice of minimalist architectural aesthetics.',
+                'architect-2-specialty': 'Sustainable Architecture Expert',
+                'architect-2-bio': 'Dedicated to integrating environmental concepts into modern architectural design, creating green and sustainable living spaces.',
+                'architect-3-specialty': 'Structural Design Expert',
+                'architect-3-bio': 'Focusing on innovative structural design, providing technical support and solutions for complex architectural forms.',
+                'about-us': 'About Us',
+                'about-description': 'We are an international firm specializing in minimalist architectural design, adhering to the "less is more" design philosophy, committed to creating timeless architectural aesthetics.',
+                'about-philosophy': 'We believe that excellent architectural design should be simple yet profound, able to coexist harmoniously with the environment, bringing joyful spatial experiences to users.',
+                'stats-projects': '50+',
+                'stats-projects-desc': 'Completed Projects',
+                'stats-clients': '30+',
+                'stats-clients-desc': 'Satisfied Clients',
+                'stats-awards': '15+',
+                'stats-awards-desc': 'Design Awards',
+                'stats-years': '8+',
+                'stats-years-desc': 'Years of Experience',
+                'learn-more': 'Learn More',
+                'contact-us': 'Contact Us',
+                'contact-description': 'Let\'s create unforgettable architectural works together',
+                'contact-info': 'Contact Information',
+                'address': 'Address',
+                'address-details': 'Beijing Chaoyang District Architectural Design Center',
+                'phone': 'Phone',
+                'email': 'Email',
+                'follow-us': 'Follow Us',
+                'name': 'Name',
+                'subject': 'Subject',
+                'message': 'Message',
+                'send-message': 'Send Message',
+                'footer-description': 'Specializing in minimalist architectural design, creating timeless architectural masterpieces.',
+                'quick-links': 'Quick Links',
+                'project-location': 'Location',
+                'project-year': 'Year',
+                'project-area': 'Area',
+                'project-type': 'Type',
+                'close': 'Close'
+            }
+        };
+
+        let currentLang = 'zh';
+
+        // 切换语言
+        function toggleLanguage() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            updateLanguage();
+        }
+
+        // 更新语言
+        function updateLanguage() {
+            const elements = document.querySelectorAll('[data-lang]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-lang');
+                if (translations[currentLang][key]) {
+                    element.textContent = translations[currentLang][key];
+                }
+            });
             
-            counters.forEach(counter => {
-                const target = +counter.getAttribute('data-target');
-                const count = +counter.innerText;
-                
-                const inc = target / speed;
-                
-                if(count < target) {
-                    counter.innerText = Math.ceil(count + inc);
-                    setTimeout(animateCounters, 1);
+            // 更新语言切换显示
+            const langToggle = document.getElementById('current-lang');
+            langToggle.textContent = currentLang === 'zh' ? '中' : 'EN';
+            
+            // 更新页面标题
+            document.title = currentLang === 'zh' ? 'ARCHITECTS - 建筑设计作品' : 'ARCHITECTS - Architectural Design Works';
+        }
+
+        // 移动端菜单切换
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // 项目筛选
+        function filterProjects(category) {
+            const projects = document.querySelectorAll('.project-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            
+            // 更新按钮状态
+            buttons.forEach(btn => {
+                btn.classList.remove('active', 'bg-black', 'text-white');
+                btn.classList.add('border-gray-200');
+            });
+            
+            event.target.classList.add('active', 'bg-black', 'text-white');
+            event.target.classList.remove('border-gray-200');
+            
+            // 筛选项目
+            projects.forEach(project => {
+                if (category === 'all' || project.dataset.category === category) {
+                    project.style.display = 'block';
                 } else {
-                    counter.innerText = target;
+                    project.style.display = 'none';
                 }
             });
         }
 
-        // Initialize counters when page loads
-        window.addEventListener('load', animateCounters);
+        // 项目数据
+        const projectData = {
+            project1: {
+                title: { zh: '极简主义别墅', en: 'Minimalist Villa' },
+                description: { zh: '这座极简主义别墅体现了"少即是多"的设计理念。建筑采用纯粹的几何形态，白色的外立面与周围环境形成鲜明对比。大面积的玻璃窗引入充足的自然光线，创造出明亮通透的室内空间。', en: 'This minimalist villa embodies the "less is more" design philosophy. The building adopts pure geometric forms, with white facades creating a striking contrast with the surrounding environment. Large glass windows bring in abundant natural light, creating bright and transparent interior spaces.' },
+                image: 'https://p3-flow-imagex-sign.byteimg.com/labis/7f25a52b1f5ee42a3f3f28ba977889ac~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=ruVkz9ZMsBmHPkSynSeVJ2NOGKQ%3D',
+                location: { zh: '北京', en: 'Beijing' },
+                year: '2024',
+                area: '450㎡',
+                type: { zh: '住宅', en: 'Residential' }
+            },
+            project2: {
+                title: { zh: '对称式住宅', en: 'Symmetrical Residence' },
+                description: { zh: '对称式设计展现了建筑的平衡与和谐之美。建筑与自然环境完美融合，创造出宁静祥和的居住氛围。', en: 'Symmetrical design showcases the beauty of balance and harmony in architecture. The building blends perfectly with the natural environment, creating a peaceful and serene living atmosphere.' },
+                image: 'https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-qvj2lq49k0/044365d1d53649dabb3207a4358676a8~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=ZJstgzHWBW5K8BjqzUfeCHYRdi8%3D',
+                location: { zh: '上海', en: 'Shanghai' },
+                year: '2024',
+                area: '380㎡',
+                type: { zh: '住宅', en: 'Residential' }
+            },
+            project3: {
+                title: { zh: '现代办公空间', en: 'Modern Office Space' },
+                description: { zh: '开放式设计理念，创造灵活多变的办公环境。大面积玻璃幕墙提供充足自然光，促进员工的工作效率和身心健康。', en: 'Open design concept creating flexible and versatile office environments. Large glass curtain walls provide abundant natural light, promoting employee productivity and well-being.' },
+                image: 'https://p3-flow-imagex-sign.byteimg.com/labis/be3762dacfa8dee7a1644d8bc953cd71~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=fKcn4ZC27Px8QnlmRqD14HlD5B4%3D',
+                location: { zh: '深圳', en: 'Shenzhen' },
+                year: '2023',
+                area: '2000㎡',
+                type: { zh: '商业', en: 'Commercial' }
+            },
+            project4: {
+                title: { zh: '现代别墅设计', en: 'Contemporary Villa Design' },
+                description: { zh: '结合现代设计与自然元素，使用可持续材料打造环保住宅。', en: 'Combining modern design with natural elements, using sustainable materials to create eco-friendly residences.' },
+                image: 'https://p3-flow-imagex-sign.byteimg.com/labis/d46482e03263329a20d4beb37ca940c8~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=rKkC54h277i82Va2x046uJ7JVmw%3D',
+                location: { zh: '杭州', en: 'Hangzhou' },
+                year: '2023',
+                area: '520㎡',
+                type: { zh: '住宅', en: 'Residential' }
+            },
+            project5: {
+                title: { zh: '公共文化中心', en: 'Public Cultural Center' },
+                description: { zh: '为社区提供文化交流平台，设计注重开放性和包容性。', en: 'Providing a cultural exchange platform for the community, with a focus on openness and inclusivity in design.' },
+                image: 'https://p3-flow-imagex-sign.byteimg.com/labis/f736b33d6519d11820524a9fe8e67f40~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=P13FYBL4SHt0bgg9pSUWQe4jKoA%3D',
+                location: { zh: '广州', en: 'Guangzhou' },
+                year: '2023',
+                area: '8000㎡',
+                type: { zh: '公共', en: 'Public' }
+            },
+            project6: {
+                title: { zh: '创意商业空间', en: 'Creative Commercial Space' },
+                description: { zh: '独特的建筑形态吸引顾客，创造难忘的购物体验。', en: 'Unique architectural forms attract customers, creating unforgettable shopping experiences.' },
+                image: 'https://p3-flow-imagex-sign.byteimg.com/labis/c6b136bf4f55e998050a6cdc98a82e0f~tplv-be4g95zd3a-image.jpeg?rcl=202511140155261D7125EF0F36C4903A7A&rk3s=8e244e95&rrcfp=b5c662a1&x-expires=1763661326&x-signature=YZ0nPjFBi76gaHA8uDJuXFkGFnw%3D',
+                location: { zh: '成都', en: 'Chengdu' },
+                year: '2022',
+                area: '3500㎡',
+                type: { zh: '商业', en: 'Commercial' }
+            }
+        };
 
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
+        // 打开项目模态框
+        function openProjectModal(projectId) {
+            const project = projectData[projectId];
+            const modal = document.getElementById('project-modal');
+            
+            document.getElementById('modal-image').src = project.image;
+            document.getElementById('modal-title').textContent = project.title[currentLang];
+            document.getElementById('modal-description').textContent = project.description[currentLang];
+            document.getElementById('modal-location').textContent = project.location[currentLang];
+            document.getElementById('modal-year').textContent = project.year;
+            document.getElementById('modal-area').textContent = project.area;
+            document.getElementById('modal-type').textContent = project.type[currentLang];
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭项目模态框
+        function closeProjectModal() {
+            const modal = document.getElementById('project-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // 提交表单
+        function submitForm(event) {
+            event.preventDefault();
+            alert(currentLang === 'zh' ? '留言发送成功！我们会尽快回复您。' : 'Message sent successfully! We will reply to you as soon as possible.');
+            event.target.reset();
+        }
+
+        // 滚动动画
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.section-fade');
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
                 
-                const targetId = this.getAttribute('href');
-                if(targetId === '#') return;
-                
-                const targetElement = document.querySelector(targetId);
-                if(targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                    
-                    document.querySelector('nav ul').classList.remove('active');
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        // 导航栏滚动效果
+        function handleNavbarScroll() {
+            const navbar = document.querySelector('nav');
+            if (window.scrollY > 100) {
+                navbar.classList.add('bg-white/95');
+                navbar.classList.remove('bg-white/90');
+            } else {
+                navbar.classList.add('bg-white/90');
+                navbar.classList.remove('bg-white/95');
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 绑定筛选按钮事件
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.filter;
+                    filterProjects(category);
+                });
+            });
+            
+            // 滚动事件监听
+            window.addEventListener('scroll', function() {
+                handleScrollAnimations();
+                handleNavbarScroll();
+            });
+            
+            // 初始动画
+            setTimeout(handleScrollAnimations, 300);
+            
+            // 点击模态框外部关闭
+            document.getElementById('project-modal').addEventListener('click', function(event) {
+                if (event.target === this) {
+                    closeProjectModal();
+                }
+            });
+            
+            // ESC键关闭模态框
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeProjectModal();
                 }
             });
         });
     </script>
 </body>
-
 </html>
